@@ -216,9 +216,7 @@ public class HeavyHudPanel extends JPanel {
 		g2.setPaint(Color.WHITE);
 		g2.draw(bound);
 
-		Shape center = new Ellipse2D.Double(0.5 * this.getBounds().getWidth()
-				- 6, 0.5
-				* this.getBounds().getHeight()- 6, 12, 12);
+		Shape center = new Ellipse2D.Double(0.5 * this.getBounds().getWidth()- 6, 0.5* this.getBounds().getHeight()- 6, 12, 12);
 
 		g2.setPaint(Color.WHITE);
 		g2.draw(center);
@@ -354,14 +352,14 @@ public class HeavyHudPanel extends JPanel {
 				double x = arg.getX() - this.lastPoint.getX();
 				double y = arg.getY() - this.lastPoint.getY();
 
-				System.out.println("---------------------------\n" + arg + "\n" + this.lastPoint);
-				
 				this.hud.setPhi(this.lastPos.getX() -x);
 				this.hud.setLambda( this.lastPos.getY() -y );
-		
 
-				this.lastPoint=this.hud.projection.inverse(relativePos);
+				//this.lastPoint=this.hud.projection.inverse(relativePos);
 				this.lastPos=new Point2D.Double(this.hud.getPhi(),this.hud.getLambda());
+				
+				System.out.println("---------------------------\n" + this.lastPos);
+				
 				this.hud.repaint();
 			}
 
