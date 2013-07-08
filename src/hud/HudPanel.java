@@ -36,7 +36,7 @@ public class HudPanel extends JPanel {
 
 	private Projection projection;
 
-	private static Color GROUND_COLOR = new Color(200, 113, 55);
+	private static Color GROUND_COLOR = new Color(255, 150, 55);
 	private static Color SKY_COLOR = new Color(0, 102, 255);
 
 	public HudPanel() {

@@ -50,8 +50,8 @@ public class HeavyHudPanel extends JPanel {
 
 	private Projection projection;
 
-	private static Color GROUND_COLOR = new Color(200, 113, 55);
-	private static Color SKY_COLOR = new Color(0, 102, 255);
+	private static Color GROUND_COLOR = new Color(200, 100, 50);
+	private static Color SKY_COLOR = new Color(50, 150, 255);
 
 	public HeavyHudPanel() {
 		super();
@@ -79,12 +79,22 @@ public class HeavyHudPanel extends JPanel {
 		this.meridianp45.moveTo(Math.PI / 2., Math.PI / 4.);
 		this.meridianm45.moveTo(Math.PI / 2., -1.*Math.PI / 4.);
 
-		int nbpts = 1800;
+		int nbpts = 3600;
 		double pos = 0.;
-		for (int i = 0; i < nbpts; i++) {
+		double pos2 = 0.;
+		double pos3= 0.;
+		for (int i = 0; i <= nbpts; i++) {
 			pos = i / (1. * nbpts);
+			pos2 = (1.*i-0.3333 )/ (1. * nbpts);
+			pos3 = (1.*i-0.6667) / (1. * nbpts);
+			
+			
+			this.northMeridian.curveTo(Math.PI / 2. - pos3 * Math.PI, 0.,Math.PI / 2. - pos2 * Math.PI, 0.,Math.PI / 2. - pos * Math.PI, 0.);
+			
 			this.horizon.lineTo(0., -1. * Math.PI + pos * Math.PI);
-			this.northMeridian.lineTo(Math.PI / 2. - pos * Math.PI, 0.);
+			
+			//this.northMeridian.lineTo(Math.PI / 2. - pos * Math.PI, 0.);
+			
 			this.southMeridian.lineTo(Math.PI / 2. - pos * Math.PI,Math.PI);
 			this.eastMeridian.lineTo(Math.PI / 2. - pos * Math.PI, Math.PI / 2.);
 
@@ -94,7 +104,7 @@ public class HeavyHudPanel extends JPanel {
 			this.meridianm45.lineTo(Math.PI / 2. - pos * Math.PI, -1.*Math.PI / 4.);
 
 		}
-		for (int i = 0; i < nbpts; i++) {
+		for (int i = 0; i <= nbpts; i++) {
 			pos = i / (1. * nbpts);
 			this.horizon.lineTo(0., pos * Math.PI);
 
@@ -230,7 +240,7 @@ public class HeavyHudPanel extends JPanel {
 		targetPath.lineTo(targetT.getX()+6, targetT.getY()+6);
 		targetPath.moveTo(targetT.getX()-6, targetT.getY()+6);
 		targetPath.lineTo(targetT.getX()+6, targetT.getY()-6);
-		g2.setPaint(Color.YELLOW);
+		g2.setPaint(Color.YELLOW.darker());
 		g2.draw(targetPath);
 
 		g2.dispose();
@@ -382,11 +392,11 @@ public class HeavyHudPanel extends JPanel {
 				break;
 			case KeyEvent.VK_UP:
 				this.hud.setPhi(this.hud.getPhi() + Math.toRadians(1)*Math.cos(this.hud.getPsi()));
-				this.hud.setLambda(this.hud.getLambda() + Math.toRadians(-1)*Math.sin(this.hud.getPsi()));
+				this.hud.setLambda(this.hud.getLambda() + Math.toRadians(1)*Math.sin(this.hud.getPsi()));
 				break;
 			case KeyEvent.VK_DOWN:
 				this.hud.setPhi(this.hud.getPhi() + Math.toRadians(-1)*Math.cos(this.hud.getPsi()));
-				this.hud.setLambda(this.hud.getLambda() + Math.toRadians(+1)*Math.sin(this.hud.getPsi()));
+				this.hud.setLambda(this.hud.getLambda() + Math.toRadians(-1)*Math.sin(this.hud.getPsi()));
 				break;
 			default:
 				break;

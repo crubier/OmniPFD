@@ -24,29 +24,21 @@ public class LambertAzimuthalProjection implements Projection {
 		return res;
 	}
 
-	public Path2D project(Path2D path) {
-		Path2D res = new Path2D.Double();
-		PathIterator pathIter = path.getPathIterator(null);
+	@Override
+	public Point2D inverse(Point2D pos) {
+		double x=pos.getX();
+		double y=pos.getY();
 
-		double[] coords = new double[6];
-		pathIter.currentSegment(coords);
-		Point2D currPt = new Point2D.Double(coords[0], coords[1]);
-		Point2D transfPt = this.project(currPt);
-		res.moveTo(transfPt.getX(), transfPt.getY());
+		double rho=Math.sqrt(x*x+y*y);
+		double c=2*Math.asin(0.5*rho);
+		
+		double phi=Math.asin(Math.sin(this.phi0)*Math.cos(c)+y*Math.cos(this.phi0)*Math.sin(c)/rho);
+		double lambda=this.lambda0+Math.atan2(x*Math.sin(c), rho*Math.cos(this.phi0)*Math.cos(c)-y*Math.sin(this.phi0)*Math.sin(c));
 
-		while (!pathIter.isDone()) {
-			pathIter.currentSegment(coords);
-			currPt = new Point2D.Double(coords[0], coords[1]);
-			transfPt = this.project(currPt);
-			res.lineTo(transfPt.getX(), transfPt.getY());
-			pathIter.next();
-		}
-
-//		res.closePath();
-
+		Point2D res = new Point2D.Double(((phi+Math.PI/2.)%Math.PI)-Math.PI/2., ((lambda+Math.PI)%(2.*Math.PI))-Math.PI);
 		return res;
-
 	}
+
 
 	public double getPhi() {
 		return this.phi0;
@@ -64,19 +56,74 @@ public class LambertAzimuthalProjection implements Projection {
 		this.lambda0 = lambda;
 	}
 
-	@Override
-	public Point2D inverse(Point2D pos) {
-		double x=pos.getX();
-		double y=pos.getY();
 
-		double rho=Math.sqrt(x*x+y*y);
-		double c=2*Math.asin(0.5*rho);
+	
+	public Path2D project(Path2D path) {
+		Path2D res = new Path2D.Double();
+		PathIterator pathIter = path.getPathIterator(null);
+
+		double[] coords = new double[6];
+	
+
+		Point2D currentP1;
+		Point2D currentP2;
+		Point2D currentP3;
+		Point2D currentP1Projected;
+		Point2D currentP2Projected;
+		Point2D currentP3Projected;
 		
-		double phi=Math.asin(Math.sin(this.phi0)*Math.cos(c)+y*Math.cos(this.phi0)*Math.sin(c)/rho);
-		double lambda=this.lambda0+Math.atan2(x*Math.sin(c), rho*Math.cos(this.phi0)*Math.cos(c)-y*Math.sin(this.phi0)*Math.sin(c));
+		
+		while (!pathIter.isDone()) {
+			
+			
+			switch(pathIter.currentSegment(coords)) {
+			case PathIterator.SEG_CUBICTO :
+				currentP1 = new Point2D.Double(coords[0], coords[1]);
+				currentP1Projected = this.project(currentP1);
+				currentP2 = new Point2D.Double(coords[2], coords[3]);
+				currentP2Projected = this.project(currentP2);
+				currentP3 = new Point2D.Double(coords[4], coords[5]);
+				currentP3Projected = this.project(currentP3);
+				res.curveTo(currentP1Projected.getX(),currentP1Projected.getY(),currentP2Projected.getX(),currentP2Projected.getY(),currentP3Projected.getX(),currentP3Projected.getY());
+				break;
+			case PathIterator.SEG_LINETO :
+				
+				currentP1 = new Point2D.Double(coords[0], coords[1]);
+				currentP1Projected = this.project(currentP1);
+				
+				res.lineTo(currentP1Projected.getX(),currentP1Projected.getY());
+				
+				break;
+			case PathIterator.SEG_MOVETO :
+				currentP1 = new Point2D.Double(coords[0], coords[1]);
+				currentP1Projected = this.project(currentP1);
+				
+				res.moveTo(currentP1Projected.getX(),currentP1Projected.getY());
+				break;
+				
+			case PathIterator.SEG_QUADTO :
+				currentP1 = new Point2D.Double(coords[0], coords[1]);
+				currentP1Projected = this.project(currentP1);
+				currentP2 = new Point2D.Double(coords[2], coords[3]);
+				currentP2Projected = this.project(currentP2);
 
-		Point2D res = new Point2D.Double(((phi+Math.PI/2.)%Math.PI)-Math.PI/2., ((lambda+Math.PI)%(2.*Math.PI))-Math.PI);
+				res.quadTo(currentP1Projected.getX(),currentP1Projected.getY(),currentP2Projected.getX(),currentP2Projected.getY());
+				break;
+			case PathIterator.SEG_CLOSE :
+				res.closePath();
+				break;
+			default:
+				break;
+			}
+			
+			
+			pathIter.next();
+		}
+
+//		res.closePath();
+
 		return res;
+
 	}
 
 	@Override
@@ -85,23 +132,66 @@ public class LambertAzimuthalProjection implements Projection {
 		PathIterator pathIter = path.getPathIterator(null);
 
 		double[] coords = new double[6];
-		pathIter.currentSegment(coords);
-		Point2D currPt = new Point2D.Double(coords[0], coords[1]);
-		Point2D transfPt = this.project(currPt);
-		res.moveTo(transfPt.getX(), transfPt.getY());
+	
 
+		Point2D currentP1;
+		Point2D currentP2;
+		Point2D currentP3;
+		Point2D currentP1Projected;
+		Point2D currentP2Projected;
+		Point2D currentP3Projected;
+		
+		
 		while (!pathIter.isDone()) {
-			pathIter.currentSegment(coords);
-			currPt = new Point2D.Double(coords[0], coords[1]);
-			transfPt = this.inverse(currPt);
-			res.lineTo(transfPt.getX(), transfPt.getY());
+			
+			
+			switch(pathIter.currentSegment(coords)) {
+			case PathIterator.SEG_CUBICTO :
+				currentP1 = new Point2D.Double(coords[0], coords[1]);
+				currentP1Projected = this.inverse(currentP1);
+				currentP2 = new Point2D.Double(coords[2], coords[3]);
+				currentP2Projected = this.inverse(currentP2);
+				currentP3 = new Point2D.Double(coords[4], coords[5]);
+				currentP3Projected = this.inverse(currentP3);
+				res.curveTo(currentP1Projected.getX(),currentP1Projected.getY(),currentP2Projected.getX(),currentP2Projected.getY(),currentP3Projected.getX(),currentP3Projected.getY());
+				break;
+			case PathIterator.SEG_LINETO :
+				
+				currentP1 = new Point2D.Double(coords[0], coords[1]);
+				currentP1Projected = this.inverse(currentP1);
+				
+				res.lineTo(currentP1Projected.getX(),currentP1Projected.getY());
+				
+				break;
+			case PathIterator.SEG_MOVETO :
+				currentP1 = new Point2D.Double(coords[0], coords[1]);
+				currentP1Projected = this.inverse(currentP1);
+				
+				res.moveTo(currentP1Projected.getX(),currentP1Projected.getY());
+				break;
+				
+			case PathIterator.SEG_QUADTO :
+				currentP1 = new Point2D.Double(coords[0], coords[1]);
+				currentP1Projected = this.inverse(currentP1);
+				currentP2 = new Point2D.Double(coords[2], coords[3]);
+				currentP2Projected = this.inverse(currentP2);
+
+				res.quadTo(currentP1Projected.getX(),currentP1Projected.getY(),currentP2Projected.getX(),currentP2Projected.getY());
+				break;
+			case PathIterator.SEG_CLOSE :
+				res.closePath();
+				break;
+			default:
+				break;
+			}
+			
+			
 			pathIter.next();
 		}
 
 //		res.closePath();
 
 		return res;
-
 	}
 
 }
