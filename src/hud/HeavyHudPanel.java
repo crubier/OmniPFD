@@ -79,7 +79,7 @@ public class HeavyHudPanel extends JPanel {
 		this.meridianp45.moveTo(Math.PI / 2., Math.PI / 4.);
 		this.meridianm45.moveTo(Math.PI / 2., -1.*Math.PI / 4.);
 
-		int nbpts = 3600;
+		int nbpts = 360;
 		double pos = 0.;
 		double pos2 = 0.;
 		double pos3= 0.;
@@ -240,9 +240,10 @@ public class HeavyHudPanel extends JPanel {
 		targetPath.lineTo(targetT.getX()+6, targetT.getY()+6);
 		targetPath.moveTo(targetT.getX()-6, targetT.getY()+6);
 		targetPath.lineTo(targetT.getX()+6, targetT.getY()-6);
-		g2.setPaint(Color.YELLOW.darker());
+		g2.setPaint(Color.GREEN);
 		g2.draw(targetPath);
-
+		
+		
 		g2.dispose();
 
 	}
