@@ -1,4 +1,4 @@
-package hud;
+package omnipfd;
 
 import javax.swing.JFrame;
 
@@ -12,7 +12,7 @@ public class Hud {
 		JFrame mainFrame = new JFrame("Test");
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		mainFrame.getContentPane().add(new HeavyHudPanel());
+		mainFrame.getContentPane().add(new QuaternionPFDPanel());
 		mainFrame.pack();
 		mainFrame.setVisible(true);
 		

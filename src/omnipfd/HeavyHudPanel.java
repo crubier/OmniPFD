@@ -1,6 +1,5 @@
-package hud;
+package omnipfd;
 
-import hud.HeavyHudPanel.HudMotionListener;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -23,6 +22,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D.Double;
 
 import javax.swing.JPanel;
+
+import omnipfd.HeavyHudPanel.HudMotionListener;
 
 import projections.LambertAzimuthalProjection;
 import projections.Projection;
