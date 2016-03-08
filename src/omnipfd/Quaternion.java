@@ -1,6 +1,6 @@
 package omnipfd;
-import javax.vecmath.Vector3d;
 
+import com.sun.javafx.geom.Vec3d;
 
 /***************************************************************************
  * Quaternion class written by BlackAxe / Kolor aka Laurent Schmalen in 1997
@@ -28,6 +28,17 @@ public class Quaternion {
 		Y = y;
 		Z = z;
 	}
+	
+	
+	
+	public Quaternion(double a, Vec3d v) {
+		Vec3d w =new Vec3d(v);
+		w.normalize();
+		W = Math.cos(a);
+		X = w.x*Math.sin(a);
+		Y = w.y*Math.sin(a);
+		Z = w.z*Math.sin(a);
+	}
 
 	// quaternion multiplication
 	public Quaternion mult (Quaternion q) {
@@ -44,6 +55,7 @@ public class Quaternion {
 		return this;
 	}
 	
+
 	
 	
 	// quaternion multiplication
@@ -77,12 +89,12 @@ public class Quaternion {
 
 		double recip = 1.0 / norme;
 
-		W =  W * recip;
-		X = -X * recip;
-		Y = -Y * recip;
-		Z = -Z * recip;
+		double nW =  W * recip;
+		double nX = -X * recip;
+		double nY = -Y * recip;
+		double nZ = -Z * recip;
 
-		return this;
+		return new Quaternion(nW,nX,nY,nZ);
 	}
 
 	// sets to unit quaternion
@@ -137,7 +149,7 @@ public class Quaternion {
 		return this;
 	}
 
-	public Quaternion fromAxis(double Angle, Vector3d axis) {
+	public Quaternion fromAxis(double Angle, Vec3d axis) {
 		return this.fromAxis(Angle, axis.x, axis.y, axis.z);
 	}
 
@@ -222,12 +234,12 @@ public class Quaternion {
 		return this;
 	}
 	
-public Quaternion rotationFromTo( Vector3d from, Vector3d to)
+public Quaternion rotationFromTo( Vec3d from, Vec3d to)
 	 {
 	     // Based on Stan Melax's article in Game Programming Gems
 	     // Copy, since cannot modify local
-			Vector3d v0 = from;
-			Vector3d v1 = to;
+	Vec3d v0 = from;
+	Vec3d v1 = to;
 	     v0.normalize();
 	     v1.normalize();
 	 
@@ -238,7 +250,7 @@ public Quaternion rotationFromTo( Vector3d from, Vector3d to)
 	     }
 	     else if (d <= -1.0) // exactly opposite
 	     {
-	    	 Vector3d axis = new Vector3d(1.0, 0., 0.);
+	    	 Vec3d axis = new Vec3d(1.0, 0., 0.);
 	         axis.cross(axis, v0);
 	         if (axis.length()==0)
 	         {
@@ -254,13 +266,34 @@ public Quaternion rotationFromTo( Vector3d from, Vector3d to)
 	     double s = Math.sqrt( (1+d)*2 ); // optimize inv_sqrt
 	     double invs = 1. / s;
 	    
-	     Vector3d c = new Vector3d();
+	     Vec3d c = new Vec3d();
 	     c.cross(v0, v1);
-	     c.scale(invs);
+	     c.mul(invs);
 	     Quaternion res = new Quaternion(s * 0.5,c.x, c.y, c.z );
 	     res.normalize();
 	     return res;
 	 }
+
+
+public Vec3d rotate(Vec3d vec) {
+	Vec3d v = new Vec3d(vec);
+	v.normalize();
+	
+	double x=v.x;
+	double y=v.y;
+	double z=v.z;
+	
+	this.normalize();
+	
+	double a=this.W;
+	double b=this.X;
+	double c=this.Y;
+	double d=this.Z;
+	
+	return new Vec3d(c*(-(c*x) + b*y + a*z) - d*(d*x + a*y - b*z) + a*(a*x - d*y + c*z) - b*(-(b*x) - c*y - d*z),
+			   -(b*(-(c*x) + b*y + a*z)) + a*(d*x + a*y - b*z) + d*(a*x - d*y + c*z) - c*(-(b*x) - c*y - d*z),
+			   a*(-(c*x) + b*y + a*z) + b*(d*x + a*y - b*z) - c*(a*x - d*y + c*z) - d*(-(b*x) - c*y - d*z));
+}
 
 @Override
 public String toString() {

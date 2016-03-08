@@ -6,14 +6,16 @@ import java.awt.Paint;
 import java.awt.Stroke;
 import java.util.List;
 
-import javax.vecmath.Vector3d;
+import com.sun.javafx.geom.Vec3d;
+
+
 
 public class QuaternionPFDObject {
 	public static enum Type {POINT, PATH_STROKE, PATH_FILL, PATH_STROKE_FILL};
 	
 	private Type type;
-	private Vector3d point;
-	private List<Vector3d> path;
+	private Vec3d point;
+	private List<Vec3d> path;
 	private Paint paint;
 	private Stroke stroke;
 	private Color color;
@@ -25,7 +27,7 @@ public class QuaternionPFDObject {
 
 
 
-	public QuaternionPFDObject(Type type, Vector3d point, List<Vector3d> path,
+	public QuaternionPFDObject(Type type, Vec3d point, List<Vec3d> path,
 			Paint paint, Stroke stroke, Color color) {
 		super();
 		this.type = type;
@@ -38,7 +40,7 @@ public class QuaternionPFDObject {
 
 
 
-	public QuaternionPFDObject(Vector3d point, Paint paint) {
+	public QuaternionPFDObject(Vec3d point, Paint paint) {
 		super();
 		this.point = point;
 		this.paint = paint;
@@ -47,7 +49,7 @@ public class QuaternionPFDObject {
 	
 	
 	
-	public QuaternionPFDObject(List<Vector3d> path, Stroke stroke) {
+	public QuaternionPFDObject(List<Vec3d> path, Stroke stroke) {
 		super();
 		this.path = path;
 		this.stroke = stroke;
@@ -55,7 +57,7 @@ public class QuaternionPFDObject {
 	}
 
 
-	public QuaternionPFDObject(Vector3d point, List<Vector3d> path, Paint paint) {
+	public QuaternionPFDObject(Vec3d point, List<Vec3d> path, Paint paint) {
 		super();
 		this.point = point;
 		this.path = path;
@@ -65,7 +67,7 @@ public class QuaternionPFDObject {
 
 
 
-	public QuaternionPFDObject(Vector3d point, List<Vector3d> path,
+	public QuaternionPFDObject(Vec3d point, List<Vec3d> path,
 			Paint paint, Stroke stroke) {
 		super();
 		this.point = point;
@@ -77,7 +79,7 @@ public class QuaternionPFDObject {
 	
 	
 	
-	public QuaternionPFDObject(Vector3d point) {
+	public QuaternionPFDObject(Vec3d point) {
 		super();
 		this.point = point;
 		this.paint = Color.MAGENTA;
@@ -86,7 +88,7 @@ public class QuaternionPFDObject {
 	
 	
 	
-	public QuaternionPFDObject(List<Vector3d> path) {
+	public QuaternionPFDObject(List<Vec3d> path) {
 		super();
 		this.path = path;
 		this.stroke = new BasicStroke();
@@ -94,7 +96,7 @@ public class QuaternionPFDObject {
 	}
 
 
-	public QuaternionPFDObject(Vector3d point, List<Vector3d> path) {
+	public QuaternionPFDObject(Vec3d point, List<Vec3d> path) {
 		super();
 		this.point = point;
 		this.path = path;
@@ -108,16 +110,16 @@ public class QuaternionPFDObject {
 	public void setType(Type type) {
 		this.type = type;
 	}
-	public Vector3d getPoint() {
+	public Vec3d getPoint() {
 		return point;
 	}
-	public void setPoint(Vector3d point) {
+	public void setPoint(Vec3d point) {
 		this.point = point;
 	}
-	public List<Vector3d> getPath() {
+	public List<Vec3d> getPath() {
 		return path;
 	}
-	public void setPath(List<Vector3d> path) {
+	public void setPath(List<Vec3d> path) {
 		this.path = path;
 	}
 	public Paint getPaint() {
